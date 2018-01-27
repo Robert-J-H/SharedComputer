@@ -19,7 +19,7 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : _("""Ensures that numLock is deactivated when starting NVDA."""),
 	# version
-	"addon_version" : "1.0-dev",
+	"addon_version" : "1.1-dev",
 	# Author(s)
 	"addon_author" : u"Noelia Ruiz Martínez <nrm1977@gmail.com>",
 	# URL for the add-on documentation support
