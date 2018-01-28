@@ -11,15 +11,15 @@ addon_info = {
 	# for previously unpublished addons, please follow the community guidelines at:
 	# https://bitbucket.org/nvdaaddonteam/todo/raw/master/guideLines.txt
 	# add-on Name, internal for nvda
-	"addon_name" : "numLockManager",
+	"addon_name" : "useSharedComputers",
 	# Add-on summary, usually the user visible name of the addon.
 	# Translators: Summary for this add-on to be shown on installation and add-on information.
-	"addon_summary" : _("NumLoc Manager"),
+	"addon_summary" : _("Use Shared Computers"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description" : _("""Ensures that numLock is deactivated when starting NVDA."""),
+	"addon_description" : _("""Adds the possibility of choosing the state of the numLock key at start or when changing configuration profiles, and the volume level when NVDA is loaded, ensuring it's not muted."""),
 	# version
-	"addon_version" : "1.1-dev",
+	"addon_version" : "1.0-dev",
 	# Author(s)
 	"addon_author" : u"Noelia Ruiz Martínez <nrm1977@gmail.com>",
 	# URL for the add-on documentation support
