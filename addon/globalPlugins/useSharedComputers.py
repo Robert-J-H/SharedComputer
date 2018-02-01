@@ -114,17 +114,13 @@ class AddonSettingsDialog(SettingsDialog):
 		activateLabel = _("&Activate NumLock:")
 		self.activateChoices = (_("off"), _("on"), _("not changed"))
 		self.activateList = sHelper.addLabeledControl(activateLabel, wx.Choice, choices=self.activateChoices)
-
 		self.activateList.Selection = config.conf["useSharedComputers"]["activation"]
-
 		# Translators: label of a dialog.
 		self.changeVolumeLevelCheckBox = sHelper.addItem(wx.CheckBox(self, label=_("&Change volume level")))
 		self.changeVolumeLevelCheckBox.Value = config.conf["useSharedComputers"]["changeVolumeLevel"]
-		self.changeVolumeLevelCheckBox.Enabled = (config.conf.profiles[-1].name is None)
 		# Translators: Label of a dialog.
 		self.volumeLevel = sHelper.addLabeledControl(_("Volume level:"), nvdaControls.SelectOnFocusSpinCtrl,
 			min=0, max=100, initial=config.conf["useSharedComputers"]["volumeLevel"])
-		self.volumeLevel.Enabled = (config.conf.profiles[-1].name is None)
 
 	def postInit(self):
 		self.activateList.SetFocus()
@@ -132,8 +128,9 @@ class AddonSettingsDialog(SettingsDialog):
 	def onOk(self,evt):
 		super(AddonSettingsDialog, self).onOk(evt)
 		config.conf["useSharedComputers"]["activation"] = self.activateList.Selection
-		config.conf["useSharedComputers"]["changeVolumeLevel"] = self.changeVolumeLevelCheckBox.Value
-		config.conf["useSharedComputers"]["volumeLevel"] = self.volumeLevel.Value
+		# write only to the normal configuration
+		config.conf.profiles[0]["useSharedComputers"]["changeVolumeLevel"] = self.changeVolumeLevelCheckBox.Value
+		config.conf.profiles[0]["useSharedComputers"]["volumeLevel"] = self.volumeLevel.Value
 
 # Audio Stuff
 def getVolumeObject():
