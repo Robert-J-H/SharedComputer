@@ -17,13 +17,16 @@ addon_info = {
 	"addon_summary" : _("Use Shared Computers"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description" : _("""Adds the possibility of choosing the state of the numLock key at start or when changing configuration profiles, and the volume level when NVDA is loaded, ensuring it's not muted."""),
+	"addon_description" : _("""Adds the possibility of choosing the state of the numLock key at start or when changing configuration profiles.
+	Additionally, the Windows  master volume can be set, either as a minimum or as an absolute percentage.
+	This ensures that the user hears the screen reader even if the volume has previously been muted or turned to a low level.
+	It will be applied  on normal restarts or on reloading addons, not on profile changes."""),
 	# version
-	"addon_version" : "1.0-dev",
+	"addon_version" : "1.1-dev",
 	# Author(s)
-	"addon_author" : u"Noelia Ruiz Martínez <nrm1977@gmail.com>",
+	"addon_author" : u"Noelia Ruiz Martínez <nrm1977@gmail.com>, Robert Hänggi <aarjay.robert@gmail.com>",
 	# URL for the add-on documentation support
-	"addon_url" : None,
+	"addon_url" : "https://github.com/Robert-J-H/numLockManager",
 	# Documentation file name
 	"addon_docFileName" : "readme.html",
 }
