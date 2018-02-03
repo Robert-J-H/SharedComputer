@@ -21,7 +21,7 @@ addonHandler.initTranslation()
 
 confspec = {
 	"activation": "integer(default=0)",
-	"changeVolumeLevel": "boolean(default=False)",
+	"changeVolumeLevel": "integer(default=0)",
 	"volumeLevel": "integer(default=50)"
 }
 config.conf.spec["useSharedComputers"] = confspec
@@ -33,41 +33,42 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if activation < 2 and winUser.getKeyState(winUser.VK_NUMLOCK) != activation:
 			KeyboardInputGesture.fromName("numLock").send()
 
-	def changeVolumeLevel(self, volumeLevel):
-		speakers=getVolumeObject()
-		if speakers is not None:
+	def changeVolumeLevel(self, targetLevel, mode):
+		if self.speakers is not None:
 			# should actually work on first attempt
 			# but level 0 is a pain
-			# to do: level 0 and mute at the same time is for some reason not recognizable
 			for attempt in range(2):
 				processPendingEvents()
-				level=int(speakers.GetMasterVolumeLevelScalar()*100)
-				log.info("Level Speakers at Startup: {} Percent".format(level))
-				if level<volumeLevel:
-					speakers.SetMasterVolumeLevelScalar(volumeLevel/100.0,None)
-				muteState= speakers.GetMute()
-				log.info("Speakers at Startup: {}".format(("Unmuted","Muted")[muteState]))
+				level = int(self.speakers.GetMasterVolumeLevelScalar()*100)
+				log.info("Level self.speakers at Startup: {} Percent".format(level))
+				if level < targetLevel or (mode==1 and level > targetLevel):
+					self.speakers.SetMasterVolumeLevelScalar(targetLevel/100.0,None)
+				muteState = self.speakers.GetMute()
+				log.info("self.speakers at Startup: {}".format(("Unmuted","Muted")[muteState]))
 				if muteState:
-					speakers.SetMute(0, None)
+					self.speakers.SetMute(0, None)
 				time.sleep(0.05)
-				log.info("Speakers after correction: {} Percent, {}".format(
-					int(speakers.GetMasterVolumeLevelScalar()*100),
-					("Unmuted","Muted")[speakers.GetMute()]))
+				log.info("self.speakers after correction: {} Percent, {}".format(
+					int(self.speakers.GetMasterVolumeLevelScalar()*100),
+					("Unmuted","Muted")[self.speakers.GetMute()]))
 		else:
 			# As a fall-back, change the volume "manually"
-			volDown=KeyboardInputGesture.fromName("VolumeDown")
-			volUp=KeyboardInputGesture.fromName("VolumeUp")
+			# ensures only a minimum
+			volDown = KeyboardInputGesture.fromName("VolumeDown")
+			volUp = KeyboardInputGesture.fromName("VolumeUp")
 			# one keystroke = 2 % here, is that universal?
-			repeats=volumeLevel//2
+			repeats = targetLevel//2
 			# We are only interested in the side effect, hence the dummy underscore variable
 			_ = {key.send() for key in iter((volDown,)*repeats + (volUp,)*repeats)}
 			time.sleep(float(volumeLevel)/62)
 
 	def __init__(self):
+		self.speakers=getVolumeObject()
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		volLevel = config.conf["useSharedComputers"]["volumeLevel"]
-		if config.conf["useSharedComputers"]["changeVolumeLevel"]:
-			wx.CallAfter(self.changeVolumeLevel, volLevel)
+		volMode = config.conf["useSharedComputers"]["changeVolumeLevel"]
+		if volMode < 2:
+			wx.CallAfter(self.changeVolumeLevel, volLevel, volMode)
 		self.numLockState = winUser.getKeyState(winUser.VK_NUMLOCK)
 		self.handleConfigProfileSwitch()
 		try:
@@ -110,14 +111,16 @@ class AddonSettingsDialog(SettingsDialog):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		# Label of a dialog.
+		# Translators: label of a dialog.
 		activateLabel = _("&Activate NumLock:")
-		self.activateChoices = (_("off"), _("on"), _("not changed"))
+		self.activateChoices = (_("Off"), _("On"), _("Never change"))
 		self.activateList = sHelper.addLabeledControl(activateLabel, wx.Choice, choices=self.activateChoices)
 		self.activateList.Selection = config.conf["useSharedComputers"]["activation"]
 		# Translators: label of a dialog.
-		self.changeVolumeLevelCheckBox = sHelper.addItem(wx.CheckBox(self, label=_("&Change volume level")))
-		self.changeVolumeLevelCheckBox.Value = config.conf["useSharedComputers"]["changeVolumeLevel"]
+		volumeLabel = _("Master &Volume Level at Start:")
+		self.volumeChoices = ( _("Ensure a minimum of"), _("Set exactly to"), _("Never change"))
+		self.volumeList = sHelper.addLabeledControl(volumeLabel, wx.Choice, choices=self.volumeChoices)
+		self.volumeList.Selection = config.conf["useSharedComputers"]["changeVolumeLevel"]
 		# Translators: Label of a dialog.
 		self.volumeLevel = sHelper.addLabeledControl(_("Volume level:"), nvdaControls.SelectOnFocusSpinCtrl,
 			min=0, max=100, initial=config.conf["useSharedComputers"]["volumeLevel"])
@@ -129,7 +132,7 @@ class AddonSettingsDialog(SettingsDialog):
 		super(AddonSettingsDialog, self).onOk(evt)
 		config.conf["useSharedComputers"]["activation"] = self.activateList.Selection
 		# write only to the normal configuration
-		config.conf.profiles[0]["useSharedComputers"]["changeVolumeLevel"] = self.changeVolumeLevelCheckBox.Value
+		config.conf.profiles[0]["useSharedComputers"]["changeVolumeLevel"] = self.volumeList.Selection
 		config.conf.profiles[0]["useSharedComputers"]["volumeLevel"] = self.volumeLevel.Value
 
 # Audio Stuff
