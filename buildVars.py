@@ -22,7 +22,7 @@ addon_info = {
 	This ensures that the user hears the screen reader even if the volume has previously been muted or turned to a low level.
 	It will be applied  on the next start of NVDA."""),
 	# version
-	"addon_version" : "1.1-dev",
+	"addon_version" : "1.2-dev",
 	# Author(s)
 	"addon_author" : u"Noelia Ruiz Martínez <nrm1977@gmail.com>, Robert Hänggi <aarjay.robert@gmail.com>",
 	# URL for the add-on documentation support
