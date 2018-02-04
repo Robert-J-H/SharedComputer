@@ -5,7 +5,7 @@
 # Copyright (C) 2018 Noelia Ruiz Martínez, Robert Hänggi 
 # Released under GPL 2
 
-import config
+from  config import conf
 
 def onInstall():
 	confspec = {
@@ -13,11 +13,13 @@ def onInstall():
 		"changeVolumeLevel": "integer(default=0)",
 		"volumeLevel": "integer(default=50)"
 	}
-	config.conf.spec["useSharedComputers"] = confspec
+	conf.spec["useSharedComputers"] = confspec
 	# Check for previous version where 
 	# changeVolumeLevel was a boolean
-	if config.conf["useSharedComputers"].isSet("changeVolumeLevel"):
-		volMode=config.conf["useSharedComputers"].__getitem__("changeVolumeLevel",checkValidity=False)
+	if conf["useSharedComputers"].isSet("changeVolumeLevel"):
+		volMode=conf["useSharedComputers"].__getitem__("changeVolumeLevel",checkValidity=False)
 		if not  isinstance(volMode, int):
 			# makes False 0 and True 1
-			config.conf.profiles[0]["useSharedComputers"]["changeVolumeLevel"] = int(eval(volMode))
+			conf.profiles[0]["useSharedComputers"]["changeVolumeLevel"] = int(eval(volMode))
+			# conf._writeProfileToFile(conf.profiles[0].filename, conf.profiles[0])
+			# log.info("Base configuration saved after use shared computers install tasks")
