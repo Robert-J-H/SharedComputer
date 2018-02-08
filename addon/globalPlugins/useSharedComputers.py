@@ -134,7 +134,6 @@ class AddonSettingsDialog(SettingsDialog):
 		elif key==367:
 			self.volumeLevel.SetValue(self.volumeLevel.Value-10)
 		else:
-			ui.message(str(key))
 			evt.Skip()
 
 	def onChoice(self, evt):

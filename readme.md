@@ -57,7 +57,14 @@ same as the speakers icon in the task bar or the leftmost setting in the volume 
 
 #### "Volume Level:"
 This spin control shows the volume level in percent that is applied at the start of NVDA. 
-You can either enter a value or scroll through the values with arrow up/down.
+You can perform the following actions:
+
+* Increase/decrease a value by one with Arrow Up/Down
+* Increase/decrease a value by ten  with Page Up/Down
+* Fetch the current Windows system volume with Space Bar 
+* Select a value (e.g. with Control+A)
+* Overwrite a selected value
+
 The lower limit is raised from zero to twenty percent for the option "Set exactly to".
 It won't be shown if the option "Never change" has been selected in the previous combo box.
 
@@ -73,6 +80,8 @@ takes the saved settings rather than the recently set ones.
 * NumLock off default only for desktop computers
 * added install tasks
 * new readme and labels for GUI
+* Page up/down in spin control to increase/decrease volume level by tens.
+* Space bar in spin control to fetch current volume level.
 
 ## Changes for 1.1 ##
 
