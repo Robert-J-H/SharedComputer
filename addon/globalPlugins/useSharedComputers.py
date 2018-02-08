@@ -124,12 +124,17 @@ class AddonSettingsDialog(SettingsDialog):
 
 	def onKey(self, evt):
 		global speakers
-		key=evt.GetUnicodeKey()
+		key = max(evt.GetUnicodeKey(), evt.GetKeyCode())
 		if  key== 32:
 			val = int(speakers.GetMasterVolumeLevelScalar()*100)
 			self.volumeLevel.SetValue(val)
 			wx.CallLater(50, ui.message, str(self.volumeLevel.Value))
+		elif key==366:
+			self.volumeLevel.SetValue(self.volumeLevel.Value+10)
+		elif key==367:
+			self.volumeLevel.SetValue(self.volumeLevel.Value-10)
 		else:
+			ui.message(str(key))
 			evt.Skip()
 
 	def onChoice(self, evt):
