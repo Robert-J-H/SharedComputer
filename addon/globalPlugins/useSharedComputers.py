@@ -7,9 +7,8 @@
 
 import globalPluginHandler
 import addonHandler
-import gui, ui, wx, time, tones, winUser, config
-from gui import guiHelper
-from gui import nvdaControls
+import gui, ui, wx, winUser, config
+from gui import guiHelper, nvdaControls
 from gui.settingsDialogs import SettingsDialog
 from keyboardHandler import KeyboardInputGesture
 from globalCommands import SCRCAT_CONFIG
@@ -17,15 +16,17 @@ from comtypes import HRESULT,GUID,IUnknown, COMMETHOD, POINTER, CoCreateInstance
 from ctypes.wintypes import BOOL, DWORD, UINT 
 from logHandler import log
 from api import processPendingEvents
+
 addonHandler.initTranslation()
 activationDefault="0" if config.conf['keyboard']['keyboardLayout']=="desktop" else "2"
 confspec = {
 	"activation": "integer(default="+activationDefault+")",
 	"changeVolumeLevel": "integer(default=0)",
-	"volumeLevel": "integer(default=50)"
+	"volumeLevel": "integer(0, 100, default = 50)"
 }
 config.conf.spec["useSharedComputers"] = confspec
 speakers=None
+
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def handleConfigProfileSwitch(self):
@@ -35,8 +36,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def changeVolumeLevel(self, targetLevel, mode):
 		if speakers is not None:
-			# should actually work on first attempt
-			# but level 0 is a pain
 			for attempt in range(2):
 				processPendingEvents()
 				level = int(speakers.GetMasterVolumeLevelScalar()*100)
@@ -47,20 +46,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				log.info("speakers at Startup: {}".format(("Unmuted","Muted")[muteState]))
 				if muteState:
 					speakers.SetMute(0, None)
-				time.sleep(0.05)
 				log.info("speakers after correction: {} Percent, {}".format(
 					int(speakers.GetMasterVolumeLevelScalar()*100),
 					("Unmuted","Muted")[speakers.GetMute()]))
-		else:
-			# As a fall-back, change the volume "manually"
-			# ensures only a minimum
-			volDown = KeyboardInputGesture.fromName("VolumeDown")
-			volUp = KeyboardInputGesture.fromName("VolumeUp")
-			# one keystroke = 2 % here, is that universal?
-			repeats = targetLevel//2
-			# We are only interested in the side effect, hence the dummy underscore variable
-			_ = {key.send() for key in iter((volDown,)*repeats + (volUp,)*repeats)}
-			time.sleep(float(volumeLevel)/62)
 
 	def __init__(self):
 		global speakers
@@ -128,9 +116,21 @@ class AddonSettingsDialog(SettingsDialog):
 		self.volumeList.Bind(wx.EVT_CHOICE, self.onChoice) 
 		# Translators: Label of a dialog.
 		self.volumeLevel = sHelper.addLabeledControl(_("Volume &Level:"), 
-			nvdaControls.SelectOnFocusSpinCtrl, 
+			nvdaControls.SelectOnFocusSpinCtrl,
 			min = 20 if self.volumeList.Selection==1 else 0, 
 			initial=config.conf["useSharedComputers"]["volumeLevel"])
+
+		self.volumeLevel.Bind(wx.EVT_CHAR_HOOK, self.onKey)
+
+	def onKey(self, evt):
+		global speakers
+		key=evt.GetUnicodeKey()
+		if  key== 32:
+			val = int(speakers.GetMasterVolumeLevelScalar()*100)
+			self.volumeLevel.SetValue(val)
+			wx.CallLater(50, ui.message, str(self.volumeLevel.Value))
+		else:
+			evt.Skip()
 
 	def onChoice(self, evt):
 		val=evt.GetSelection()

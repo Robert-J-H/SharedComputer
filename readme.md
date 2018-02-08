@@ -64,18 +64,22 @@ It won't be shown if the option "Never change" has been selected in the previous
 Note that these settings are saved on termination of NVDA.
 This means that for instance the command "Reload add-ons" (NVDA+Control+F3) 
 takes the saved settings rather than the recently set ones.
+
 ---
 
 ## Changes for 1.2 ##
+
 * added absolute volume level choice with 20 % lower limit
 * NumLock off default only for desktop computers
 * added install tasks
 * new readme and labels for GUI
 
 ## Changes for 1.1 ##
+
 * Added the possibility to set a minimum Windows master volume automatically at start of NVDA
 
 ## Changes for 1.0 ##
+
 * Initial version.
 
 [2]: https://github.com/nvdaes/numLockManager/releases/download/1.-dev/numLockManager-1.1-dev.nvda-addon
