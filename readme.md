@@ -22,12 +22,12 @@ On first time installation, it will be opened automatically.
 
 This dialog, found in NVDA's menu, under the Preferences submenu, provides the following options:
 
-### NumLock Settings
+### NumLock Settings<span>
 #### "Activate NumLock:"
 
 - Off:  
   The NumLock key will be  deactivated automatically.
-   This is the NVDA-friendly setting and the default for desktop computers. 
+  This is the NVDA-friendly setting and the default for desktop computers. 
 - On:  
   The NumLock key will be activated automatically.
   The recommended setting if you type a lot of numbers or your keyboard layout is generally "Laptop".
@@ -37,10 +37,14 @@ This dialog, found in NVDA's menu, under the Preferences submenu, provides the f
 
 The setting will be applied each time that you start NVDA or switch to another profile.
 
+</span>
+
 ### System Volume Settings
 
 Note: System volume refers to the overall master volume of Windows, 
 same as the speakers icon in the task bar or the leftmost setting in the volume mixer.
+
+<span>
 #### "System Volume at Start:"
 
 - Ensure a minimum of:  
@@ -55,6 +59,10 @@ same as the speakers icon in the task bar or the leftmost setting in the volume 
   All volume corrections, including unmuting, will be off.
   In other words, this feature will be disabled.
 
+</span>
+
+<span>
+
 #### "Volume Level:"
 This spin control shows the volume level in percent that is applied at the start of NVDA. 
 You can perform the following actions:
@@ -67,6 +75,8 @@ You can perform the following actions:
 
 The lower limit is raised from zero to twenty percent for the option "Set exactly to".
 It won't be shown if the option "Never change" has been selected in the previous combo box.
+
+</span>
 
 Note that these settings are saved on termination of NVDA.
 This means that for instance the command "Reload add-ons" (NVDA+Control+F3) 

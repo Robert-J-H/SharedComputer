@@ -7,7 +7,7 @@
 
 import globalPluginHandler
 import addonHandler
-import gui, ui, wx, winUser, config
+import gui, ui, wx, winUser, config, re
 from gui import guiHelper, nvdaControls
 from gui.settingsDialogs import SettingsDialog
 from keyboardHandler import KeyboardInputGesture
@@ -18,6 +18,9 @@ from logHandler import log
 from api import processPendingEvents
 
 addonHandler.initTranslation()
+
+helpPath=addonHandler.getCodeAddon().getDocFilePath()
+
 activationDefault="0" if config.conf['keyboard']['keyboardLayout']=="desktop" else "2"
 confspec = {
 	"activation": "integer(default="+activationDefault+")",
@@ -99,7 +102,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 class AddonSettingsDialog(SettingsDialog):
 
 # Translators: Title of a dialog.
-	title = _("Use Shared Computers settings")
+	title = _("Shared Computer Settings (F1 for Context Help)")
+	#translators: title of the browsable help message
+	helpTitle=_(u"Help")
+	#translators: advice on how to close   the browsable help message
+	hint=_(u"\n<p>Press escape to close this message</p>")
+	lastFocus = None
+	helpDict={}
+	with open(helpPath,'r') as helpFile:
+		help_html=helpFile.read().decode("utf8")
+	sections = re.match('(.*<body>).+(<span>.+</span>).+(<span>.+</span>).*(<span>.+</span>).*(</body>.*)',
+		help_html,
+		flags=re.DOTALL).groups()
+	del help_html
 
 	def makeSettings(self, settingsSizer):
 		sHelper = guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -113,14 +128,31 @@ class AddonSettingsDialog(SettingsDialog):
 		self.volumeChoices = ( _("Ensure a minimum of"), _("Set exactly to"), _("Never change"))
 		self.volumeList = sHelper.addLabeledControl(volumeLabel, wx.Choice, choices=self.volumeChoices)
 		self.volumeList.Selection = config.conf["useSharedComputers"]["changeVolumeLevel"]
-		self.volumeList.Bind(wx.EVT_CHOICE, self.onChoice) 
 		# Translators: Label of a dialog.
 		self.volumeLevel = sHelper.addLabeledControl(_("Volume &Level:"), 
 			nvdaControls.SelectOnFocusSpinCtrl,
 			min = 20 if self.volumeList.Selection==1 else 0, 
 			initial=config.conf["useSharedComputers"]["volumeLevel"])
 
+		# several event bindings
+		self.Bind(wx.EVT_ACTIVATE, self.onDialogActivate)
+		self.volumeList.Bind(wx.EVT_CHOICE, self.onChoice) 
 		self.volumeLevel.Bind(wx.EVT_CHAR_HOOK, self.onKey)
+		for number, child in enumerate([self.activateList, self.volumeList, self.volumeLevel], 1):
+			self.helpDict[child.GetId()] = u'\n'.join((self.sections[0], self.sections[number], self.hint, self.sections[4]))
+			child.Bind(wx.EVT_HELP, self.onHelp)
+
+	def onDialogActivate(self, evt):
+		"Ensures that the current control will be the same after switching to another window and back"
+		if not evt.GetActive():
+			self.lastFocus=self.FindFocus()
+		elif self.lastFocus:
+			self.lastFocus.SetFocus()
+
+	def onHelp(self, evt):
+		helpText = self.helpDict.get(evt.GetEventObject().GetId(), None)
+		if helpText:
+			ui.browseableMessage(helpText, self.helpTitle, True)
 
 	def onKey(self, evt):
 		global speakers
