@@ -14,7 +14,7 @@ system sounds or the still running screen reader.
 You can now make sure that the screen reader restarts with a minimal or absolute system volume level. 
 The units are the same as in the task bar for the speakers icon.
 
-## Shared Computers settings Dialog##
+## Shared Computers settings Dialog ##
 
 Note: You can assign a gesture to open this dialog from NVDA's menu, Preferences submenu, Input gestures dialog, Configuration category.
 
