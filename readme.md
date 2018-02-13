@@ -1,5 +1,5 @@
-# Use Shared Computers #
-* Authors: Noelia Ruiz Martínez, Robert Hänggi
+# Shared Computer #
+* Authors: Robert Hänggi, Noelia Ruiz Martínez
 * download [development version][2]
 
 ## Introduction
@@ -14,13 +14,17 @@ system sounds or the still running screen reader.
 You can now make sure that the screen reader restarts with a minimal or absolute system volume level. 
 The units are the same as in the task bar for the speakers icon.
 
-## Use Shared Computers settings Dialog##
+## Shared Computers settings Dialog##
 
 Note: You can assign a gesture to open this dialog from NVDA's menu, Preferences submenu, Input gestures dialog, Configuration category.
 
 On first time installation, it will be opened automatically.
 
-This dialog, found in NVDA's menu, under the Preferences submenu, provides the following options:
+It has three controls and you can press F1 in any of them to display the help associated with it.  
+
+This dialog can be found in the NVDA menu under preferences, "Shared Computer".
+
+The following options are available:
 
 ### NumLock Settings<span>
 #### "Activate NumLock:"
@@ -83,6 +87,15 @@ This means that for instance the command "Reload add-ons" (NVDA+Control+F3)
 takes the saved settings rather than the recently set ones.
 
 ---
+
+## Changes for 1.3 ##
+
+* changed add-on name
+* added contextual help for all controls
+* corrected a bug in NVDA dialogs where focus in a control wasn't restored after Window switching
+* fixed a problem with writing volume settings to normal configuration
+* corrected translation related issues
+* updated readme
 
 ## Changes for 1.2 ##
 
