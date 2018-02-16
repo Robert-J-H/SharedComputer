@@ -80,8 +80,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			_("Shared Comp&uter..."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, self.settingsItem)
 		# first installation: open dialog automatically
-		if not (config.conf["sharedComputer"].isSet("volumeCorrectionChoice") or SettingsDialog._hasInstance or gui.isInMessageBox):
-			wx.CallAfter(self.onSettings, None)
+		# if not (config.conf["sharedComputer"].isSet("volumeCorrectionChoice") or SettingsDialog._hasInstance or gui.isInMessageBox):
+			# wx.CallAfter(self.onSettings, None)
 
 	def terminate(self):
 		if winUser.getKeyState(winUser.VK_NUMLOCK) != self.numLockState:

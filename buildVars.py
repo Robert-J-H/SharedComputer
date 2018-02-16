@@ -1,7 +1,9 @@
 # -*- coding: UTF-8 -*-
-
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
+import time
+tl=time.localtime(time.time())
+
 # Full getext (please don't change)
 _ = lambda x : x
 
@@ -21,11 +23,11 @@ addon_info = {
 	This ensures that the user hears the screen reader even if the volume has previously been muted or turned to a low level.
 	It will be applied on the next start of NVDA."""),
 	# version
-	"addon_version" : "1.3-dev",
+	"addon_version" : "{}.{}-dev".format(str(tl.tm_year)[2:], str(tl.tm_yday).zfill(3)),
 	# Author(s)
 	"addon_author" : u"Robert Hänggi <aarjay.robert@gmail.com>, Noelia Ruiz Martínez <nrm1977@gmail.com>",
 	# URL for the add-on documentation support
-	"addon_url" : "https://github.com/Robert-J-H/UseSharedComputers.git",
+	"addon_url" : "https://github.com/Robert-J-H/SharedComputer",
 	# Documentation file name
 	"addon_docFileName" : "readme.html",
 }

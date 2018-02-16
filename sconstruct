@@ -10,7 +10,8 @@ import os.path
 import zipfile
 
 import buildVars
-
+from argparse import Namespace
+info = Namespace(**buildVars.addon_info)
 
 def md2html(source, dest):
 	import markdown
@@ -22,6 +23,18 @@ def md2html(source, dest):
 	}
 	with codecs.open(source, "r", "utf-8") as f:
 		mdText = f.read()
+		mdText = ''.join((
+			mdText, 
+			"[2]: ", 
+			info.addon_url, 
+			"/releases/download/", 
+			info.addon_version,
+			"/",
+			info.addon_name, 
+			"-",
+			info.addon_version,
+			".nvda-addon"
+		))
 		for k, v in headerDic.iteritems():
 			mdText = mdText.replace(k, v, 1)
 		htmlText = markdown.markdown(mdText)

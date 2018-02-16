@@ -18,8 +18,6 @@ The units are the same as in the task bar for the speakers icon.
 
 Note: You can assign a gesture to open this dialog from NVDA's menu, Preferences submenu, Input gestures dialog, Configuration category.
 
-On first time installation, it will be opened automatically.
-
 It has three controls and you can press F1 in any of them to display the help associated with it.  
 
 This dialog can be found in the NVDA menu under preferences, "Shared Computer".
@@ -82,9 +80,7 @@ It won't be shown if the option "Never change" has been selected in the previous
 
 </span>
 
-Note that these settings are saved on termination of NVDA.
-This means that for instance the command "Reload add-ons" (NVDA+Control+F3) 
-takes the saved settings rather than the recently set ones.
+Tip: You can reload add-ons (NVDA+Control+F3) to apply e.g. the volume changes without restart.
 
 ---
 
@@ -114,4 +110,3 @@ takes the saved settings rather than the recently set ones.
 
 * Initial version.
 
-[2]: https://github.com/nvdaes/numLockManager/releases/download/1.-dev/numLockManager-1.1-dev.nvda-addon
