@@ -19,16 +19,21 @@ from api import processPendingEvents
 
 addonHandler.initTranslation()
 
-helpPath=addonHandler.getCodeAddon().getDocFilePath()
+helpPath = addonHandler.getCodeAddon().getDocFilePath()
 
-numLockByLayoutDefault="0" if config.conf['keyboard']['keyboardLayout']=="desktop" else "2"
+numLockByLayoutDefault = "0" if config.conf['keyboard']['keyboardLayout'] == "desktop" else "2"
 confspec = {
 	"numLockActivationChoice": "integer(default="+numLockByLayoutDefault+")",
 	"volumeCorrectionChoice": "integer(default=0)",
 	"volumeLevel": "integer(0, 100, default = 50)"
 }
 config.conf.spec["sharedComputer"] = confspec
-speakers=None
+speakers = None
+
+def _getBaseValue(key):
+	val1 = config.conf.profiles[0]["sharedComputer"].get(key)
+	val2 = config.conf["sharedComputer"].get(key)
+	return int(val1) if val1 is not None else int(val2)
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
@@ -43,7 +48,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				processPendingEvents()
 				level = int(speakers.GetMasterVolumeLevelScalar()*100+0.5)
 				log.info("Level speakers at Startup: {} Percent".format(level))
-				if level < targetLevel or (mode==1 and level > targetLevel):
+				if level < targetLevel or (mode == 1 and level > targetLevel):
 					speakers.SetMasterVolumeLevelScalar(targetLevel/100.0,None)
 				muteState = speakers.GetMute()
 				log.info("speakers at Startup: {}".format(("Unmuted","Muted")[muteState]))
@@ -55,10 +60,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def __init__(self):
 		global speakers
-		speakers=getVolumeObject()
+		speakers = getVolumeObject()
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
-		volLevel = config.conf["sharedComputer"]["volumeLevel"]
-		volMode = config.conf["sharedComputer"]["volumeCorrectionChoice"]
+		volLevel = _getBaseValue("volumeLevel")
+		volMode = _getBaseValue("volumeCorrectionChoice")
 		if volMode < 2:
 			wx.CallAfter(self.changeVolumeLevel, volLevel, volMode)
 		self.numLockState = winUser.getKeyState(winUser.VK_NUMLOCK)
@@ -104,17 +109,18 @@ class AddonSettingsDialog(SettingsDialog):
 # Translators: Title of a dialog.
 	title = _("Shared Computer Settings (F1 for Context Help)")
 	# Translators: title of the browsable help message
-	helpTitle=_(u"Help")
+	helpTitle = _(u"Help")
 	# Translators: advice on how to close the browsable help message
-	hint=_(u"<p>Press escape to close this message</p>")
+	hint = _(u"Press escape to close this message.")
+	hint = u"<p>{}</p>".format(hint)
 	lastFocus = None
-	helpDict={}
+	helpDict = {}
 	with open(helpPath,'r') as helpFile:
-		help_html=helpFile.read().decode("utf8")
+		helpHTML = helpFile.read().decode("utf8")
 	sections = re.match('(.*<body>).+(<span>.+</span>).+(<span>.+</span>).*(<span>.+</span>).*(</body>.*)',
-		help_html,
+		helpHTML,
 		flags=re.DOTALL).groups()
-	del help_html
+	del helpHTML
 
 	def makeSettings(self, settingsSizer):
 		sHelper = guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -139,12 +145,12 @@ class AddonSettingsDialog(SettingsDialog):
 			# Translators: Choice in Volume at Start combo box
 			_("Never change"))
 		self.volumeList = sHelper.addLabeledControl(volumeLabel, wx.Choice, choices=self.volumeChoices)
-		self.volumeList.Selection = config.conf["sharedComputer"]["volumeCorrectionChoice"]
+		self.volumeList.Selection = _getBaseValue("volumeCorrectionChoice")
 		# Translators: Label of a spin control
 		self.volumeLevel = sHelper.addLabeledControl(_("Volume &Level:"), 
 			nvdaControls.SelectOnFocusSpinCtrl,
 			min = 20 if self.volumeList.Selection==1 else 0, 
-			initial=config.conf["sharedComputer"]["volumeLevel"])
+			initial = _getBaseValue("volumeLevel"))
 
 		# several event bindings
 		self.Bind(wx.EVT_ACTIVATE, self.onDialogActivate)
@@ -158,7 +164,7 @@ class AddonSettingsDialog(SettingsDialog):
 		"Ensures that the current control will be the same after switching to another window and back"
 		# store focus when the user switches to another window
 		if not evt.GetActive():
-			self.lastFocus=self.FindFocus()
+			self.lastFocus = self.FindFocus()
 		elif self.lastFocus:
 			self.lastFocus.SetFocus()
 
@@ -170,27 +176,27 @@ class AddonSettingsDialog(SettingsDialog):
 	def onKey(self, evt):
 		global speakers
 		key = max(evt.GetUnicodeKey(), evt.GetKeyCode())
-		if key== 32:
+		if key == 32:
 			val = int(speakers.GetMasterVolumeLevelScalar()*100+0.5)
 			self.volumeLevel.SetValue(val)
 			wx.CallLater(50, ui.message, str(self.volumeLevel.Value))
-		elif key==366:
+		elif key == 366:
 			self.volumeLevel.SetValue(self.volumeLevel.Value+10)
-		elif key==367:
+		elif key == 367:
 			self.volumeLevel.SetValue(self.volumeLevel.Value-10)
 		else:
 			evt.Skip()
 
 	def onChoice(self, evt):
-		val=evt.GetSelection()
-		if val==0:
+		val = evt.GetSelection()
+		if val == 0:
 			self.volumeLevel.SetRange(0, 100)
-			self.volumeLevel.Enabled=True
-		if val==1:
+			self.volumeLevel.Enabled = True
+		if val == 1:
 			self.volumeLevel.SetRange(20, 100)
-			self.volumeLevel.Enabled=True
-		if val==2:
-			self.volumeLevel.Enabled=False
+			self.volumeLevel.Enabled = True
+		if val == 2:
+			self.volumeLevel.Enabled = False
 
 	def postInit(self):
 		self.activateList.SetFocus()
@@ -199,9 +205,11 @@ class AddonSettingsDialog(SettingsDialog):
 		super(AddonSettingsDialog, self).onOk(evt)
 		config.conf["sharedComputer"]["numLockActivationChoice"] = self.activateList.Selection
 		# write only to the normal configuration
-		config.conf.profiles[0].update({"sharedComputer": {
+		newSettings = {"sharedComputer": {
 			"volumeCorrectionChoice": self.volumeList.Selection,
-			"volumeLevel": self.volumeLevel.Value}})
+			"volumeLevel": self.volumeLevel.Value}}
+		config.conf._profileCache[None].update(newSettings)
+		config.conf.profiles[0].update(newSettings)
 
 # Audio Stuff
 def getVolumeObject():
