@@ -26,7 +26,7 @@ deploy:
   description: This is the release $(APPVEYOR_REPO_TAG_NAME) of the $(REPO_NAME) addon for the NVDA screen reader built and uploaded to GitHub using Appveyor.
 
   auth_token:
-    secure: 3yxF2EQ/wfLKNEobcRfdNL6srjXjoMdRa/LSQ7z2PJNqOL3IEyiFtlnxxHeIQskH
+    secure: QdbBL5QzSF969JOL9thDI8/UuHiThJMZ6C6j5b5PakkxH5uzai4nIiZoo7gUPjGyXQtm6AmT+E86iMfK1ZfPkQ==
   artifact: addon
   on:
     appveyor_repo_tag: true
