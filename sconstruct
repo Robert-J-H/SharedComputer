@@ -23,18 +23,6 @@ def md2html(source, dest):
 	}
 	with codecs.open(source, "r", "utf-8") as f:
 		mdText = f.read()
-		mdText = ''.join((
-			mdText, 
-			"[2]: ", 
-			info.addon_url, 
-			"/releases/download/", 
-			info.addon_version,
-			"/",
-			info.addon_name, 
-			"-",
-			info.addon_version,
-			".nvda-addon"
-		))
 		for k, v in headerDic.iteritems():
 			mdText = mdText.replace(k, v, 1)
 		htmlText = markdown.markdown(mdText)
@@ -98,6 +86,23 @@ def createAddonHelp(dir):
 		cssPath = os.path.join(docsDir, "style.css")
 		cssTarget = env.Command(cssPath, "style.css", Copy("$TARGET", "$SOURCE"))
 		env.Depends(addon, cssTarget)
+	if os.path.isfile("raw_readme.md"):
+		with codecs.open("raw_readme.md", "r", "utf-8") as f:
+			mdText = f.read()
+			mdText = ''.join((
+				mdText, 
+				"[2]: ", 
+				info.addon_url, 
+				"/releases/download/", 
+				info.addon_version,
+				"/",
+				info.addon_name, 
+				"-",
+				info.addon_version,
+				".nvda-addon"
+			))
+		with codecs.open("readme.md", "w", "utf-8") as f:
+			f.write(mdText)
 	if os.path.isfile("readme.md"):
 		readmePath = os.path.join(docsDir, "en", "readme.md")
 		readmeTarget = env.Command(readmePath, "readme.md", Copy("$TARGET", "$SOURCE"))

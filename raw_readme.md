@@ -110,4 +110,3 @@ Tip: You can reload add-ons (NVDA+Control+F3) to apply e.g. the volume changes w
 
 * Initial version.
 
-[2]: https://github.com/Robert-J-H/SharedComputer/releases/download/18.048-dev/sharedComputer-18.048-dev.nvda-addon
