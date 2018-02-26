@@ -28,6 +28,8 @@ addon_info = {
 	"addon_author" : u"Robert Hänggi <aarjay.robert@gmail.com>, Noelia Ruiz Martínez <nrm1977@gmail.com>",
 	# URL for the add-on documentation support
 	"addon_url" : "https://github.com/Robert-J-H/SharedComputer",
+	# URL for the add-on download endpoint
+	"addon_request_url" : "https://api.github.com/repos/Robert-J-H/SharedComputer/releases",
 	# Documentation file name
 	"addon_docFileName" : "readme.html",
 }

@@ -10,8 +10,6 @@ import os.path
 import zipfile
 
 import buildVars
-from argparse import Namespace
-info = Namespace(**buildVars.addon_info)
 
 def md2html(source, dest):
 	import markdown
@@ -52,11 +50,22 @@ def mdTool(env):
 	)
 	env['BUILDERS']['markdown']=mdBuilder
 
+def upload2GitHub(source, dest):
+	print env.File(source).abspath
+	print str(dir(env.File(source)))
+
+
 
 env = Environment(ENV=os.environ, tools=['gettexttool', mdTool])
 env.Append(**buildVars.addon_info)
 
 addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
+
+def uploadGenerator(target, source, env, for_signature):
+	action=env.Action(
+		lambda target,source,env: upload2GitHub(source[0].path, target[0].path) and None,
+		lambda target,source,env: 'Uploading %s'%source[0])
+	return action
 
 def addonGenerator(target, source, env, for_signature):
 	action = env.Action(lambda target, source, env : createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,
@@ -79,6 +88,7 @@ def translatedManifestGenerator(target, source, env, for_signature):
 env['BUILDERS']['NVDAAddon'] = Builder(generator=addonGenerator)
 env['BUILDERS']['NVDAManifest'] = Builder(generator=manifestGenerator)
 env['BUILDERS']['NVDATranslatedManifest'] = Builder(generator=translatedManifestGenerator)
+env['BUILDERS']['upload'] = Builder(generator=uploadGenerator)
 
 def createAddonHelp(dir):
 	docsDir = os.path.join(dir, "doc")
@@ -91,15 +101,30 @@ def createAddonHelp(dir):
 			mdText = f.read()
 			mdText = ''.join((
 				mdText, 
-				"[2]: ", 
-				info.addon_url, 
-				"/releases/download/", 
-				info.addon_version,
-				"/",
-				info.addon_name, 
-				"-",
-				info.addon_version,
-				".nvda-addon"
+'''
+  <script>
+   var xhr = new XMLHttpRequest();
+   var placeholder = document.getElementById('devel-version');
+   xhr.open("GET", "''',
+				env['addon_request_url'],
+				'''", true);
+   xhr.setRequestHeader("Accept", "application/vnd.github.v3+json");
+   xhr.send();
+   xhr.onreadystatechange = processRequest;
+   function processRequest(e) {
+    if (xhr.readyState == 4) {
+     if (xhr.status == 200) {
+      var response = JSON.parse(xhr.responseText);
+      var releases = response.sort(function(a, b) {
+        a = new Date(a.assets[0].updated_at);
+        b = new Date(b.assets[0].updated_at);
+        return a>b ? -1 : a<b ? 1 : 0;
+      });
+      placeholder.textContent = "Development version " + releases[0].tag_name;
+      placeholder.href = releases[0].assets[0].browser_download_url;
+     }
+    }
+}  </script>'''
 			))
 		with codecs.open("readme.md", "w", "utf-8") as f:
 			f.write(mdText)
@@ -107,8 +132,6 @@ def createAddonHelp(dir):
 		readmePath = os.path.join(docsDir, "en", "readme.md")
 		readmeTarget = env.Command(readmePath, "readme.md", Copy("$TARGET", "$SOURCE"))
 		env.Depends(addon, readmeTarget)
-
-
 
 def createAddonBundleFromPath(path, dest):
 	""" Creates a bundle from a directory that contains an addon manifest file."""
@@ -189,4 +212,8 @@ manifest = env.NVDAManifest(os.path.join("addon", "manifest.ini"), os.path.join(
 env.Depends(manifest, "buildVars.py")
 
 env.Depends(addon, manifest)
+# if  GetOption('git'):
+upload=env.upload(addon)
+env.Alias('upload', upload)
+env.Depends(upload, addon)
 env.Default(addon)

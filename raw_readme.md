@@ -1,6 +1,6 @@
 # Shared Computer #
 * Authors: Robert Hänggi, Noelia Ruiz Martínez
-* download [development version][2]
+* download <a id = "devel-version"></a>
 
 ## Introduction
 This add-on is targeted at sighted and screen reader users that share a computer, for instance in computer labs. 
@@ -71,7 +71,7 @@ You can perform the following actions:
 
 * Increase/decrease a value by one with Arrow Up/Down
 * Increase/decrease a value by ten  with Page Up/Down
-* Fetch the current Windows system volume with Space Bar 
+* Fetch the current Windows system volume with Space Bar (replaces old value) 
 * Select a value (e.g. with Control+A)
 * Overwrite a selected value
 
@@ -84,21 +84,30 @@ Tip: You can reload add-ons (NVDA+Control+F3) to apply e.g. the volume changes w
 
 ---
 
+## Changes for 18.057 ##
+
+* Changed version numbering system to year.dday
+* The download link of the add-on help redirects  now to the newest version rather than the installed one
+* For convenience, the version number is added to the link 
+* Volume levels are now correctly rounded
+* Dialog popup for first installation removed
+* Freshly set options are now applied on reloading add-ons 
+
 ## Changes for 1.3 ##
 
-* changed add-on name
-* added contextual help for all controls
-* corrected a bug in NVDA dialogs where focus in a control wasn't restored after Window switching
-* fixed a problem with writing volume settings to normal configuration
-* corrected translation related issues
+* Changed add-on name
+* Added contextual help for all controls
+* Fixed  a bug in NVDA dialogs where focus in a control wasn't restored after Window switching
+* Fixed a problem with writing volume settings to normal configuration
+* Fixed translation related issues
 * updated readme
 
 ## Changes for 1.2 ##
 
-* added absolute volume level choice with 20 % lower limit
+* Added absolute volume level choice with 20 % lower limit
 * NumLock off default only for desktop computers
-* added install tasks
-* new readme and labels for GUI
+* Added install tasks
+* New readme and labels for GUI
 * Page up/down in spin control to increase/decrease volume level by tens.
 * Space bar in spin control to fetch current volume level.
 
