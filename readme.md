@@ -134,7 +134,7 @@ Tip: You can reload add-ons (NVDA+Control+F3) to apply e.g. the volume changes w
       var releases = response.sort(function(a, b) {
         a = new Date(a.assets[0].updated_at);
         b = new Date(b.assets[0].updated_at);
-        return a>b ? -1 : a<b ? 1 : 0;
+        return b<a ? -1 : a<b ? 1 : 0;
       });
       placeholder.textContent = "Development version " + releases[0].tag_name;
       placeholder.href = releases[0].assets[0].browser_download_url;
