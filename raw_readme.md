@@ -1,6 +1,6 @@
 # Shared Computer #
 * Authors: Robert Hänggi, Noelia Ruiz Martínez
-* download <a id = "devel-version"></a>
+* Download: <a id = "devel-version" url_placeholder>Development version</a>
 
 ## Introduction
 This add-on is targeted at sighted and screen reader users that share a computer, for instance in computer labs. 

@@ -1,6 +1,6 @@
 # Shared Computer #
 * Authors: Robert Hänggi, Noelia Ruiz Martínez
-* download <a id = "devel-version"></a>
+* Download: <a id = "devel-version" href = "https://github.com/Robert-J-H/SharedComputer/releases/latest">Development version</a>
 
 ## Introduction
 This add-on is targeted at sighted and screen reader users that share a computer, for instance in computer labs. 
@@ -140,4 +140,5 @@ Tip: You can reload add-ons (NVDA+Control+F3) to apply e.g. the volume changes w
       placeholder.href = releases[0].assets[0].browser_download_url;
      }
     }
-}  </script>
+  }
+  </script>

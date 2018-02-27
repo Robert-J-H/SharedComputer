@@ -99,6 +99,10 @@ def createAddonHelp(dir):
 	if os.path.isfile("raw_readme.md"):
 		with codecs.open("raw_readme.md", "r", "utf-8") as f:
 			mdText = f.read()
+			mdText=mdText.replace(
+				'url_placeholder',
+				'href = "'+env['addon_url']+'/releases/latest"',
+			)
 			mdText = ''.join((
 				mdText, 
 '''
@@ -124,7 +128,8 @@ def createAddonHelp(dir):
       placeholder.href = releases[0].assets[0].browser_download_url;
      }
     }
-}  </script>'''
+  }
+  </script>'''
 			))
 		with codecs.open("readme.md", "w", "utf-8") as f:
 			f.write(mdText)
