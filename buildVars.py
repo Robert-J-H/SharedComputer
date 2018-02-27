@@ -31,7 +31,7 @@ addon_info = {
 	# URL for the add-on download endpoint
 	"addon_request_url" : "https://api.github.com/repos/Robert-J-H/SharedComputer/releases",
 	# Documentation file name
-	"addon_docFileName" : "readme.html",
+	"addon_docFileName" : "help.html",
 }
 
 

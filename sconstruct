@@ -103,10 +103,11 @@ def createAddonHelp(dir):
 				'url_placeholder',
 				'href = "'+env['addon_url']+'/releases/latest"',
 			)
+		with codecs.open("readme.md", "w", "utf-8") as f:
+			f.write(mdText)
 			mdText = ''.join((
 				mdText, 
-'''
-  <script>
+'''  <script>
    var xhr = new XMLHttpRequest();
    var placeholder = document.getElementById('devel-version');
    xhr.open("GET", "''',
@@ -131,12 +132,12 @@ def createAddonHelp(dir):
   }
   </script>'''
 			))
-		with codecs.open("readme.md", "w", "utf-8") as f:
+		with codecs.open("help.md", "w", "utf-8") as f:
 			f.write(mdText)
-	if os.path.isfile("readme.md"):
-		readmePath = os.path.join(docsDir, "en", "readme.md")
-		readmeTarget = env.Command(readmePath, "readme.md", Copy("$TARGET", "$SOURCE"))
-		env.Depends(addon, readmeTarget)
+	if os.path.isfile("help.md"):
+		helpPath = os.path.join(docsDir, "en", "help.md")
+		helpTarget = env.Command(helpPath, "help.md", Copy("$TARGET", "$SOURCE"))
+		env.Depends(addon, helpTarget)
 
 def createAddonBundleFromPath(path, dest):
 	""" Creates a bundle from a directory that contains an addon manifest file."""
