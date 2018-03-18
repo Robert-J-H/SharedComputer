@@ -117,7 +117,7 @@ class AddonSettingsDialog(SettingsDialog):
 	helpDict = {}
 	with open(helpPath,'r') as helpFile:
 		helpHTML = helpFile.read().decode("utf8")
-	sections = re.match('(.*<body>).+(<span>.+</span>).+(<span>.+</span>).*(<span>.+</span>).*(</body>.*)',
+	sections = re.match('(.*<body>).+(<div.+</div>).+(<div.+</div>).*(<div.+</div>).*(</body>.*)',
 		helpHTML,
 		flags=re.DOTALL).groups()
 	del helpHTML

@@ -24,7 +24,10 @@ This dialog can be found in the NVDA menu under preferences, "Shared Computer".
 
 The following options are available:
 
-### NumLock Settings<span>
+### NumLock Settings
+
+<div markdown="1" >
+
 #### "Activate NumLock:"
 
 - Off:  
@@ -39,14 +42,15 @@ The following options are available:
 
 The setting will be applied each time that you start NVDA or switch to another profile.
 
-</span>
+</div>
 
 ### System Volume Settings
 
 Note: System volume refers to the overall master volume of Windows, 
 same as the speakers icon in the task bar or the leftmost setting in the volume mixer.
 
-<span>
+<div markdown="1" >
+
 #### "System Volume at Start:"
 
 - Ensure a minimum of:  
@@ -61,9 +65,9 @@ same as the speakers icon in the task bar or the leftmost setting in the volume 
   All volume corrections, including unmuting, will be off.
   In other words, this feature will be disabled.
 
-</span>
+</div>
 
-<span>
+<div markdown="1" >
 
 #### "Volume Level:"
 This spin control shows the volume level in percent that is applied at the start of NVDA. 
@@ -78,7 +82,7 @@ You can perform the following actions:
 The lower limit is raised from zero to twenty percent for the option "Set exactly to".
 It won't be shown if the option "Never change" has been selected in the previous combo box.
 
-</span>
+</div>
 
 Tip: You can reload add-ons (NVDA+Control+F3) to apply e.g. the volume changes without restart.
 
